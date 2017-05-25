@@ -108,7 +108,7 @@
                         <div class="collapsible-header"><i class="material-icons">schedule</i>Timeouts</div>
                         <div class="collapsible-body">
                             <p class="flow-text">
-                                Timeout duration in seconds per button from left to right. 0 means permanent ban.
+                                Timeout duratios in seconds per button from left to right. 0 means permanent ban.
                             </p>
                             <p class="range-field">
                                 <input type="range" id="timeout-setting-0" min="0" max="7200" step="60">
@@ -122,6 +122,26 @@
                             <p class="range-field hide-on-med-and-down">
                                 <input type="range" id="timeout-setting-3" min="0" max="7200" step="60">
                             </p>
+                            <hr>
+                            <p class="flow-text">
+                                Hotkeys for timeout durations and other actions in the modcards. Combinations are currently <strong>not</strong> supported.
+                            </p>
+                            <div class="input-field">
+                                <input id="timeout-hotkey-0" type="text" data-length="1">
+                                <label for="timeout-hotkey-0">Hotkey (default b)</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="timeout-hotkey-1" type="text" data-length="1">
+                                <label for="timeout-hotkey-1">Hotkey (default h)</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="timeout-hotkey-2" type="text" data-length="1">
+                                <label for="timeout-hotkey-2">Hotkey (default t)</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="timeout-hotkey-3" type="text" data-length="1">
+                                <label for="timeout-hotkey-3">Hotkey (default p)</label>
+                            </div>
                             <hr>
                             <div class="switch">
                                 <label>
@@ -162,7 +182,8 @@
 
 <div id="modcard" class="modal">
     <div class="modal-content">
-        
+        <h4 id="modal-user"></h4>
+        <a href="#" class="no-op">
     </div>
 </div>
 

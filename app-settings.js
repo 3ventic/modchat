@@ -1,8 +1,9 @@
 var app_settings = {
-    version: 4,
+    version: 5,
     hover_notification: true,
     use_high_res_emotes: false,
     timeout_durations: [0, 3600, 600, 1],
+    modcard_hotkeys: ['b', 'h', 't', 'p'], // One for each timeout duration in order
     name_colors: false,
     prompt_reason: false,
     default_reason: ''
@@ -10,6 +11,11 @@ var app_settings = {
 
 (function () {
     "use strict";
+
+    // Defaults for necessary settings
+    var default_settings = {
+        modcard_hotkeys: ['b', 'h', 't', 'p']
+    };
 
     // Load settings
     var settings = JSON.parse(localStorage.getItem('settings'));
@@ -36,6 +42,12 @@ var app_settings = {
         input.value = app_settings.timeout_durations[i];
         input.addEventListener('change', function () {
             app_settings.timeout_durations[i] = parseInt(this.value, 10);
+        });
+
+        input = document.getElementById('timeout-hotkey-' + i);
+        input.value = app_settings.modcard_hotkeys[i];
+        input.addEventListener('change', function () {
+            app_settings.modcard_hotkeys[i] = this.value = this.value ? this.value[0] : default_settings.modcard_hotkeys[i];
         });
     }
 
