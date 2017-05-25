@@ -238,7 +238,7 @@ function ChatClient(user, channel, post_event) {
     };
 
     this.el_input.addEventListener('keydown', evt => {
-        if (evt.keyCode === 13) {
+        if (evt.key === 'Enter') {
             if (this.el_input.value.length > 500) {
                 Materialize.toast('Message too long!', 500);
                 return;
@@ -259,7 +259,7 @@ function ChatClient(user, channel, post_event) {
             this.history.push(this.el_input.value);
             this.history_index = this.history.length;
             this.el_input.value = '';
-        } else if (evt.keyCode === 38) {
+        } else if (evt.key === 'ArrowUp') {
             // Up arrow goes back in history
             if (this.history_index > 0) {
                 this.history_index -= 1;
@@ -268,7 +268,7 @@ function ChatClient(user, channel, post_event) {
 
             // Set cursor to end, setTimeout to workaround browser quirks
             setTimeout(_ => this.el_input.selectionStart = 500, 0);
-        } else if (evt.keyCode === 40) {
+        } else if (evt.key === 'ArrowDown') {
             // Down arrow goes forward in history
             if (this.history_index < this.history.length) {
                 this.history_index += 1;
