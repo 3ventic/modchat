@@ -4,6 +4,7 @@ var twitchApiBaseHeaders = new Headers({
     'Accept': 'application/json',
     'Authorization': 'OAuth ' + localStorage.token
 });
+var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=ises2vcn10gk4dq0w083d0ortqwdzx&redirect_uri=https%3A%2F%2Ftwitchstuff.3v.fi%2Fmodchat%2F&response_type=token&scope=chat_login';
 
 (function () {
     'use strict';
@@ -16,7 +17,14 @@ var twitchApiBaseHeaders = new Headers({
         // Initialize app
 
         if (window.location.hash.length > 1) {
-            load_channel_data(window.location.hash.substring(1));
+            let hash_parts = window.location.hash.substring(1).split(/[=&]/g);
+            if (hash_parts.length > 2 && hash_parts[0] === 'access_token') {
+                localStorage.token = hash_parts[1];
+                window.location.hash = '';
+                window.location.reload();
+            } else {
+                load_channel_data(window.location.hash.substring(1));
+            }
         } else {
             $('#channel-prompt').modal({
                 dismissible: false,
@@ -34,7 +42,7 @@ var twitchApiBaseHeaders = new Headers({
             .then(response => response.json())
             .then(function (json) {
                 if (!json.token.valid) {
-                    window.location.replace("./auth.html");
+                    window.location.replace(twitchApiAuthUrl);
                     return;
                 }
                 pubsub.connect();
