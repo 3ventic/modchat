@@ -75,6 +75,11 @@ function PubSub() {
     };
 
     this.send_json = message => {
+        if (this.ws.readyState !== this.ws.OPEN) {
+            console.log('Attempted to send but pubsub wasn\'t ready. Attempting again in .1s', message);
+            setTimeout(this.send_json, 100, message);
+            return;
+        }
         this.ws.send(JSON.stringify(message));
     };
 

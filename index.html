@@ -66,6 +66,10 @@
         <li>
             <div class="collapsible-header"><i class="material-icons">settings</i>Settings</div>
             <div class="collapsible-body" id="settings">
+                <p class="flow-text">
+                    Most settings take effect immediately after changing the setting, but will not save across refreshes until you choose to save.
+                    Some settings may require a save and refresh.
+                </p>
                 <ul class="collapsible" data-collapsible="accordion">
                     <li>
                         <div class="collapsible-header"><i class="material-icons">backup</i>Import &amp; Export</div>
@@ -128,19 +132,23 @@
                             </p>
                             <div class="input-field">
                                 <input id="timeout-hotkey-0" type="text" data-length="1">
-                                <label for="timeout-hotkey-0">Hotkey (default b)</label>
+                                <label for="timeout-hotkey-0">Timeout Hotkey 1 (default b)</label>
                             </div>
                             <div class="input-field">
                                 <input id="timeout-hotkey-1" type="text" data-length="1">
-                                <label for="timeout-hotkey-1">Hotkey (default h)</label>
+                                <label for="timeout-hotkey-1">Timeout Hotkey 2 (default h)</label>
                             </div>
                             <div class="input-field">
                                 <input id="timeout-hotkey-2" type="text" data-length="1">
-                                <label for="timeout-hotkey-2">Hotkey (default t)</label>
+                                <label for="timeout-hotkey-2">Timeout Hotkey 3 (default t)</label>
                             </div>
                             <div class="input-field">
                                 <input id="timeout-hotkey-3" type="text" data-length="1">
-                                <label for="timeout-hotkey-3">Hotkey (default p)</label>
+                                <label for="timeout-hotkey-3">Timeout Hotkey 4 (default p)</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="report-hotkey" type="text" data-length="1">
+                                <label for="report-hotkey">Report Hotkey (default r)</label>
                             </div>
                             <hr>
                             <div class="switch">
@@ -182,8 +190,28 @@
 
 <div id="modcard" class="modal">
     <div class="modal-content">
-        <h4 id="modal-user"></h4>
-        <a href="#" class="no-op">
+        <h4><a href="#" id="modal-user"></a></h4>
+        <a href="#" class="btn-flat waves-effect waves-red" id="modal-timeout-0">Ban</a>
+        <a href="#" class="btn-flat waves-effect waves-red" id="modal-timeout-1">1h</a>
+        <a href="#" class="btn-flat waves-effect waves-red" id="modal-timeout-2">10m</a>
+        <a href="#" class="btn-flat waves-effect waves-red" id="modal-timeout-3">1s</a>
+        <a href="#" class="btn-flat waves-effect waves-red" id="modal-report">Report</a>
+        <div class="input-field">
+            <input id="whisper-input" type="text">
+            <label for="whisper-input">Whisper</label>
+        </div>
+    </div>
+</div>
+
+<div id="reason-prompt" class="modal">
+    <div class="modal-content">
+        <div class="input-field">
+            <input id="reason-prompt-input" type="text" data-length="200">
+            <label for="reason-prompt-input">Reason</label>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat"><i class="material-icons">send</i></a>
+        </div>
     </div>
 </div>
 

@@ -6,7 +6,8 @@ var app_settings = {
     modcard_hotkeys: ['b', 'h', 't', 'p'], // One for each timeout duration in order
     name_colors: false,
     prompt_reason: false,
-    default_reason: ''
+    default_reason: '',
+    report_hotkey: 'r'
 };
 
 (function () {
@@ -14,7 +15,8 @@ var app_settings = {
 
     // Defaults for necessary settings
     var default_settings = {
-        modcard_hotkeys: ['b', 'h', 't', 'p']
+        modcard_hotkeys: ['b', 'h', 't', 'p'],
+        report_hotkey: 'r'
     };
 
     // Load settings
@@ -36,6 +38,7 @@ var app_settings = {
     document.getElementById('name-colors').checked = app_settings.name_colors;
     document.getElementById('prompt-reason').checked = app_settings.prompt_reason;
     document.getElementById('default-reason').value = app_settings.default_reason;
+    document.getElementById('report-hotkey').value = app_settings.report_hotkey;
 
     for (let i = 0; i < app_settings.timeout_durations.length; i += 1) {
         let input = document.getElementById('timeout-setting-' + i);
@@ -66,6 +69,9 @@ var app_settings = {
     });
     document.getElementById('default-reason').addEventListener('change', function () {
         app_settings.default_reason = this.value;
+    });
+    document.getElementById('report-hotkey').addEventListener('change', function () {
+        app_settings.report_hotkey = this.value ? this.value[0] : default_settings.report_hotkey;
     });
     document.getElementById('save-settings').addEventListener('click', function () {
         localStorage.setItem('settings', JSON.stringify(app_settings));

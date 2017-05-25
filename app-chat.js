@@ -1,14 +1,31 @@
-function ChatClient(user, channel, post_event) {
+function ChatClient(p_user, p_channel, p_post_event) {
     "use strict";
 
     this.el_input = document.getElementById('chat-feed-input');
+    this.el_whisper_input = document.getElementById('whisper-input');
     this.history = ['', '', '', '', '', '', '', '', '', ''];
     this.history_index = this.history.length;
-    this.user = user;
-    this.channel = channel;
-    this.post_event = post_event;
+    this.user = p_user;
+    this.channel = p_channel;
+    this.post_event = p_post_event;
+    this.badge_sets = {};
 
-    /// TODO: load badges
+    fetch('https://badges.twitch.tv/v1/badges/global/display?language=en')
+        .then(response => response.json())
+        .then(json => {
+            if (json.badge_sets) {
+                this.badge_sets = json.badge_sets;
+                fetch('https://badges.twitch.tv/v1/badges/channels/' + this.channel._id + '/display?language=en')
+                    .then(response => response.json())
+                    .then(json => {
+                        if (json.badge_sets) {
+                            for (let set in json.badge_sets) {
+                                this.badge_sets[set] = json.badge_sets[set];
+                            }
+                        }
+                    });
+            }
+        });
 
     this.cs = new tmi.client({
         options: { debug: false },
@@ -17,10 +34,10 @@ function ChatClient(user, channel, post_event) {
             secure: true
         },
         identity: {
-            username: user.name,
+            username: this.user.name,
             password: 'oauth:' + localStorage.token
         },
-        channels: ['#' + channel.name]
+        channels: ['#' + this.channel.name]
     });
 
     this.cs.on('connecting', _ => this.post_to_dom('Connecting...'));
@@ -32,7 +49,7 @@ function ChatClient(user, channel, post_event) {
 
     this.cs.on('whisper', (from, userstate, message, self) => {
         if (self) return;
-        this.post_event('whisper', (userstate['badges-raw'] ? '[' + userstate['badges-raw'].split('/')[0] + ']' : '') + from + ': ' + message);
+        this.post_event('whisper', (userstate['badges-raw'] ? '[' + userstate['badges-raw'].split('/')[0] + ']' : '') + from.substring(1) + ': ' + message);
     });
 
     this.cs.on('roomstate', (channel, state) => {
@@ -53,10 +70,65 @@ function ChatClient(user, channel, post_event) {
         });
     });
 
+    this.timeout = (user, duration, reason) => {
+        if (typeof reason !== "string") {
+            if (app_settings.prompt_reason) {
+                $('#reason-prompt').modal({ complete: _ => this.timeout(user, duration, document.getElementById('reason-prompt-input').value) }).modal('open');
+            } else {
+                this.timeout(user, duration, app_settings.default_reason);
+            }
+        } else {
+            if (duration === 0) {
+                this.cs.ban(this.channel.name, user, reason);
+            } else {
+                this.cs.timeout(this.channel.name, user, duration, reason);
+            }
+        }
+    };
+
+    this.get_friendly_duration = duration => {
+        if (duration === 0) {
+            return "ban";
+        } else if (duration % 86400 === 0) {
+            return (duration / 86400) + ' d';
+        } else if (duration % 3600 === 0 || duration % 3600 === 1800) {
+            return (duration / 3600) + ' h';
+        } else if (duration % 60 === 0 || duration % 60 === 30) {
+            return (duration / 60) + ' m';
+        }
+        return duration + ' s';
+    };
+
     this.cs.on('message', (channel, userstate, message, self) => {
+        if (channel.substring(1) !== this.channel.name) {
+            return;
+        }
+
+        /* create row */
+
         let el_row = document.createElement('div');
         el_row.classList.add('row');
         el_row.setAttribute('data-username', userstate.username);
+
+        /* badge images */
+
+        let el_badges = [];
+        for (let badge in userstate.badges) {
+            if (this.badge_sets[badge] && this.badge_sets[badge].versions[userstate.badges[badge]]) {
+                let el_badge = document.createElement('img');
+                el_badge.classList.add('chat-badge', 'dynamic-tooltip');
+                el_badge.alt = badge;
+
+                let badge_data = this.badge_sets[badge].versions[userstate.badges[badge]];
+                el_badge.src = badge_data[app_settings.use_high_res_emotes ? "image_url_2x" : "image_url_1x"];
+                $(el_badge).tooltip({
+                    delay: 50,
+                    position: 'top',
+                    tooltip: badge_data.description
+                });
+                el_badges.push(el_badge);
+            }
+        }
 
         /* actions col */
 
@@ -75,7 +147,7 @@ function ChatClient(user, channel, post_event) {
             }
 
             el_action.addEventListener('click', evt => {
-                /// TODO: prompt for reason or send timeout
+                this.timeout(userstate.username, app_settings.timeout_durations[i]);
                 evt.preventDefault();
             });
 
@@ -87,15 +159,10 @@ function ChatClient(user, channel, post_event) {
 
         el_row.appendChild(el_col);
 
-        /* badge col */
-
-        el_col = document.createElement('div');
-        el_col.classList.add('col', 'hide-on-med-and-down', 'l2', 'xl1');
-
         /* username col */
 
         el_col = document.createElement('div');
-        el_col.classList.add('col', 's4', 'm3', 'l2', 'right-align');
+        el_col.classList.add('col', 's4', 'm3', 'l3', 'xl2', 'right-align');
 
         let el_coldata = document.createElement('span');
         el_coldata.classList.add('username');
@@ -103,9 +170,95 @@ function ChatClient(user, channel, post_event) {
         if (name.toLowerCase() !== userstate.username) {
             name += ' (' + userstate.username + ')';
         }
-        el_coldata.textContent = name;
+        for (let i = 0; i < el_badges.length; i += 1) {
+            el_coldata.appendChild(el_badges[i]);
+        }
+        el_coldata.appendChild(document.createTextNode(name));
         el_coldata.addEventListener('click', evt => {
-            /// TODO: open mod card
+            let modal = $('#modcard');
+
+            // Set variables for modcard
+            let modal_url = document.getElementById('modal-user');
+            modal_url.textContent = name;
+            modal_url.href = 'https://www.twitch.tv/' + userstate.username;
+
+            // Event handlers
+            let report = evt => {
+                window.open('https://www.twitch.tv/' + userstate.username + '/report_form?description=%0a%0a' + encodeURIComponent(channel) + ' ' + userstate.username + ': ' + message);
+                modal.modal('close');
+                evt.preventDefault();
+            }
+
+            let timeout_helper = (evt, index) => {
+                this.timeout(userstate.username, app_settings.timeout_durations[index]);
+                modal.modal('close');
+                evt.preventDefault();
+            }
+
+            let timeout = [
+                function (evt) {
+                    timeout_helper(evt, 0);
+                },
+                function (evt) {
+                    timeout_helper(evt, 1);
+                },
+                function (evt) {
+                    timeout_helper(evt, 2);
+                },
+                function (evt) {
+                    timeout_helper(evt, 3);
+                }
+            ];
+
+            let hotkey_handler = evt => {
+                if (document.activeElement !== this.el_whisper_input) {
+                    for (let i = 0; i < app_settings.modcard_hotkeys.length; i += 1) {
+                        if (evt.key === app_settings.modcard_hotkeys[i]) {
+                            document.getElementById('modal-timeout-' + i).click();
+                            modal.modal('close');
+                            evt.preventDefault();
+                            return;
+                        }
+                    }
+                    if (evt.key === app_settings.report_hotkey) {
+                        document.getElementById('modal-report').click();
+                        modal.modal('close');
+                        evt.preventDefault();
+                    }
+                }
+            }
+
+            // Hook event listeners
+            for (let i = 0; i < app_settings.timeout_durations.length; i += 1) {
+                let timeout_button = document.getElementById('modal-timeout-' + i);
+                timeout_button.addEventListener('click', timeout[i]);
+                timeout_button.textContent = this.get_friendly_duration(app_settings.timeout_durations[i]);
+            }
+            document.getElementById('modal-report').addEventListener('click', report);
+
+            document.addEventListener('keydown', hotkey_handler);
+
+            let modcard_closed = _ => {
+                console.log('modal closed');
+
+                // Unregister event handlers
+                for (let i = 0; i < app_settings.timeout_durations.length; i += 1) {
+                    document.getElementById('modal-timeout-' + i).removeEventListener('click', timeout[i]);
+                }
+
+                document.removeEventListener('keydown', hotkey_handler);
+
+                // Reset whisper input
+                this.el_whisper_input.value = '';
+            }
+
+            // Set current user for whisper input
+            this.el_whisper_input.current_user = userstate.username;
+
+            // Open modcard
+            modal.modal({
+                complete: modcard_closed
+            }).modal('open');
             evt.preventDefault();
         });
 
@@ -115,7 +268,7 @@ function ChatClient(user, channel, post_event) {
         /* message col */
 
         el_col = document.createElement('div');
-        el_col.classList.add('col', 's5', 'm6', 'l7', 'xl8', 'chat-message');
+        el_col.classList.add('col', 's5', 'm6', 'l6', 'xl8', 'chat-message');
         el_coldata = this.format_emotes(message, userstate.emotes);
         el_coldata.forEach(el => {
             el_col.appendChild(el);
@@ -126,22 +279,8 @@ function ChatClient(user, channel, post_event) {
         this.post_el_to_dom(el_row);
     });
 
-    this.get_friendly_duration = duration => {
-        if (duration === 0) {
-            return "ban";
-        } else if (duration % 86400 === 0) {
-            return (duration / 86400) + ' d';
-        } else if (duration % 3600 === 0 || duration % 3600 === 1800) {
-            return (duration / 3600) + ' h';
-        } else if (duration % 60 === 0 || duration % 60 === 30) {
-            return (duration / 60) + ' m';
-        }
-        return duration + ' s';
-    };
-
     this.timeout_messages = (channel, username, reason, duration) => {
         let el_rows = document.querySelectorAll('[data-username="' + username + '"]');
-        console.log(el_rows);
         el_rows.forEach(el => {
             el.classList.add('faded');
         });
@@ -170,13 +309,19 @@ function ChatClient(user, channel, post_event) {
                 occurrence = [parseInt(occurrence[0], 10), parseInt(occurrence[1], 10)];
                 let length = occurrence[1] - occurrence[0];
                 let empty = Array.apply(null, new Array(length + 1)).map(_ => '');
+                let emote_code = split_text.slice(occurrence[0], occurrence[1] + 1).join('');
                 split_text = split_text.slice(0, occurrence[0]).concat(empty).concat(split_text.slice(occurrence[1] + 1, split_text.length));
 
                 // Create image element
                 let el_img = document.createElement('img');
                 el_img.src = 'https://static-cdn.jtvnw.net/emoticons/v1/' + emote_id + '/' + (app_settings.use_high_res_emotes ? '2' : '1') + '.0';
                 el_img.alt = 'emote';
-                el_img.classList.add('chat-emote');
+                el_img.classList.add('chat-emote', 'dynamic-tooltip');
+                $(el_img).tooltip({
+                    delay: 50,
+                    position: 'top',
+                    tooltip: emote_code
+                });
 
                 split_text.splice(occurrence[0], 1, el_img);
             }
@@ -228,7 +373,9 @@ function ChatClient(user, channel, post_event) {
 
         // Remove excess elements from the feed
         if (el_feed.childElementCount > 100) {
+            let el_removed = el_feed.firstChild;
             el_feed.removeChild(el_feed.firstChild);
+            $(el_removed.querySelectorAll('.dynamic-tooltip')).tooltip('remove');
         }
 
         // Scroll to bottom if not hovering
@@ -236,6 +383,19 @@ function ChatClient(user, channel, post_event) {
             el_feed.scrollTop = el_feed.scrollHeight;
         }
     };
+
+    this.el_whisper_input.addEventListener('keydown', evt => {
+        if (evt.key === 'Enter') {
+            let message = this.el_whisper_input.value.replace(/[\r\n]/g, ' ');
+
+            // Send message on enter
+            this.cs.whisper(this.el_whisper_input.current_user, message);
+
+            this.post_to_dom('Sent: /w ' + this.el_whisper_input.current_user + ' ' + message);
+
+            $('#modcard').modal('close');
+        }
+    });
 
     this.el_input.addEventListener('keydown', evt => {
         if (evt.key === 'Enter') {
@@ -247,7 +407,7 @@ function ChatClient(user, channel, post_event) {
             let message = this.el_input.value.replace(/[\r\n]/g, ' ');
 
             // Send message on enter
-            this.cs.say(channel.name, message);
+            this.cs.say(this.channel.name, message);
 
             /// TODO: send fancy message - remember to check drop self messages in message callback
             if (message.startsWith('.') || message.startsWith('/')) {

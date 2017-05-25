@@ -17,6 +17,14 @@
 }
 #chat-feed .row {
     border-bottom: 1px solid #f5f5f5;
+    margin-bottom: 10px;
+}
+.chat-badge {
+    display: inline-block;
+    vertical-align: text-bottom;
+    height: 18px;
+    width: 18px;
+    margin: 0 2px;
 }
 .chat-message {
     overflow-wrap: normal;
@@ -39,6 +47,8 @@
 }
 .actions .btn-flat {
     padding: 0 0.5rem;
+    height: 28px;
+    line-height: 28px;
 }
 .faded .chat-message {
     opacity: 0.25;
