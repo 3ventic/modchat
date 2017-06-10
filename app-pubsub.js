@@ -170,7 +170,7 @@ function PubSub() {
         for (let i = 0; i < buttons.length; i += 1) {
             buttons[i].classList.add('automod-' + data.msg_id, 'btn-flat', 'waves-effect', buttondata[i].waves);
             buttons[i].addEventListener('click', evt => {
-                if (!this.classList.contains('disabled')) {
+                if (!buttons[i].classList.contains('disabled')) {
                     fetch(twitchApiBaseUrl + 'chat/automod/' + buttondata[i].type,
                         {
                             headers: twitchApiBaseHeaders,
@@ -195,7 +195,7 @@ function PubSub() {
 
     this.post_automod_action_taken_to_dom = data => {
         this.post_event_to_dom('mod', data.created_by + ' ' + data.moderation_action.split('_')[0] + ' held message from ' + data.args[0]);
-        document.getElementsByClassName('automod-' + data.msg_id).forEach(e => e.classList.add('disabled'));
+        document.querySelectorAll('.automod-' + data.msg_id).forEach(e => e.classList.add('disabled'));
     }
 }
 
