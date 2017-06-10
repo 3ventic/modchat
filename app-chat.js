@@ -139,7 +139,7 @@ function ChatClient(p_user, p_channel, p_post_event) {
             let duration = app_settings.timeout_durations[i];
             let el_action = document.createElement('a');
 
-            el_action.classList.add('btn-flat', 'waves-effect', 'waves-red')
+            el_action.classList.add('btn-flat', 'waves-effect', 'waves-red');
             if (i > 1) {
                 el_action.classList.add('hide-on-med-and-down');
             } else if (i > 0) {

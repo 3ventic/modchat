@@ -83,7 +83,7 @@ function PubSub() {
         this.ws.send(JSON.stringify(message));
     };
 
-    this.post_event_to_dom = (type, message) => {
+    this.post_event_to_dom = (type, message, buttons) => {
         // Drop duplicates
         let dupekey = type + '!' + message;
         if (this.dedupe.indexOf(dupekey) > -1) {
@@ -115,6 +115,13 @@ function PubSub() {
         el_col = document.createElement('div');
         el_col.classList.add('col', 's10', 'm11');
 
+        // Add buttons to second column
+        if (buttons) {
+            for (let i = 0; i < buttons.length; i += 1) {
+                el_col.appendChild(buttons[i]);
+            }
+        }
+
         // Create second column data
         let el_message = document.createElement('span');
 
@@ -126,7 +133,7 @@ function PubSub() {
         // Add to feed
         let el_feed = document.getElementById('events');
         el_feed.appendChild(el_row);
-        
+
         // Remove excess elements from the feed
         if (el_feed.childElementCount > 100) {
             el_feed.removeChild(el_feed.firstChild);
@@ -139,15 +146,56 @@ function PubSub() {
     }
 
     this.post_automodevent_to_dom = data => {
+        console.log('automod', data);
         // args ["username", "1st_word_in_message", "2nd_word_in_message", ...]
         // args[0] to user, join rest to rebuild message
+
+        let buttons = [
+            document.createElement('a'),
+            document.createElement('a')
+        ];
+        let buttondata = [
+            {
+                type: 'approve',
+                waves: 'waves-green',
+                icon: 'thumb_up'
+            },
+            {
+                type: 'deny',
+                waves: 'waves-red',
+                icon: 'thumb_down'
+            }
+        ];
+
+        for (let i = 0; i < buttons.length; i += 1) {
+            buttons[i].classList.add('automod-' + data.msg_id, 'btn-flat', 'waves-effect', buttondata[i].waves);
+            buttons[i].addEventListener('click', evt => {
+                if (!this.classList.contains('disabled')) {
+                    fetch(twitchApiBaseUrl + 'chat/automod/' + buttondata[i].type,
+                        {
+                            headers: twitchApiBaseHeaders,
+                            method: 'POST',
+                            body: JSON.stringify({ 'msg_id': data.msg_id })
+                        });
+                }
+                evt.preventDefault();
+            });
+            buttons[i].href = '#';
+
+            let icon = document.createElement('i');
+            icon.classList.add('material-icons');
+            icon.textContent = buttondata[i].icon;
+            buttons[i].appendChild(icon);
+        }
+
         let user = data.args.shift();
         let message = data.args.join(' ');
-        this.post_event_to_dom('automod', user + ': ' + message);
+        this.post_event_to_dom('automod', user + ': ' + message, buttons);
     };
 
     this.post_automod_action_taken_to_dom = data => {
         this.post_event_to_dom('mod', data.created_by + ' ' + data.moderation_action.split('_')[0] + ' held message from ' + data.args[0]);
+        document.getElementsByClassName('automod-' + data.msg_id).forEach(e => e.classList.add('disabled'));
     }
 }
 

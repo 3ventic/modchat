@@ -2,7 +2,8 @@ var twitchApiBaseUrl = 'https://api.twitch.tv/v5/';
 var twitchApiBaseHeaders = new Headers({
     'Client-Id': 'ises2vcn10gk4dq0w083d0ortqwdzx',
     'Accept': 'application/json',
-    'Authorization': 'OAuth ' + localStorage.token
+    'Authorization': 'OAuth ' + localStorage.token,
+    'Content-Type': 'application/json'
 });
 var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=ises2vcn10gk4dq0w083d0ortqwdzx&redirect_uri=https%3A%2F%2Ftwitchstuff.3v.fi%2Fmodchat%2F&response_type=token&scope=chat_login';
 
