@@ -95,6 +95,7 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
         if (keyName === 'Control') {
             for (let i = 0; i < feeds.length; i += 1) {
                 feeds[i].classList.remove('hovered');
+                feeds[i].scrollTop = feeds[i].scrollHeight;
                 pause_icons[i].classList.add('hidden');
             }
         }
