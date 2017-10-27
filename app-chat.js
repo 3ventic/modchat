@@ -175,7 +175,9 @@ function ChatClient(p_user, p_channel, p_post_event) {
 
         let el_username = document.createElement('span');
         el_username.classList.add('username');
-        el_username.style.color = this.color_correct(userstate.color);
+        if (app_settings.name_colors) {
+            el_username.style.color = this.color_correct(userstate.color);
+        }
         let name = this.unescape_tag(userstate["display-name"]) || this.unescape_tag(userstate.username);
         if (name.toLowerCase() !== userstate.username) {
             name += ' (' + this.unescape_tag(userstate.username) + ')';
