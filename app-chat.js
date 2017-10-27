@@ -192,7 +192,11 @@ function ChatClient(p_user, p_channel, p_post_event) {
         if (name.toLowerCase() !== userstate.username) {
             name += ' (' + this.unescape_tag(userstate.username) + ')';
         }
-        name += ': ';
+        if (userstate['message-type'] === 'action') {
+            el_row.classList.add('action');
+        } else {
+            name += ': ';
+        }
         for (let i = 0; i < el_badges.length; i += 1) {
             el_username.appendChild(el_badges[i]);
         }

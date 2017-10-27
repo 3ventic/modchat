@@ -73,6 +73,10 @@
 .row {
     margin: 0.5em auto;
 }
+.action .username,
+.action .normal {
+    font-style: oblique;
+}
 .hidden,
 #app div .hidden {
     display: none;
