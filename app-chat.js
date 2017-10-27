@@ -73,7 +73,17 @@ function ChatClient(p_user, p_channel, p_post_event) {
     this.timeout = (user, duration, reason) => {
         if (typeof reason !== "string") {
             if (app_settings.prompt_reason) {
-                $('#reason-prompt').modal({ complete: _ => this.timeout(user, duration, document.getElementById('reason-prompt-input').value) }).modal('open');
+                $('#reason-prompt').modal({
+                    ready: (modal, trigger) => {
+                        let el = document.getElementById('reason-prompt-input');
+                        el.focus();
+                        el.select();
+                    },
+                    complete: _ => {
+                        let el = document.getElementById('reason-prompt-input');
+                        this.timeout(user, duration, el.value);
+                    }
+                }).modal('open');
             } else {
                 this.timeout(user, duration, app_settings.default_reason);
             }
