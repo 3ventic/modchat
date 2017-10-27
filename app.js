@@ -79,17 +79,25 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
 
     // Event handlers
     let feeds = document.getElementsByClassName('feed');
-    for (let i = 0; i < feeds.length; i += 1) {
-        feeds[i].addEventListener('mouseenter', function () {
-            this.classList.add('hovered');
-            if (app_settings.hover_notification) {
-                Materialize.toast('Feed paused due to hover', 1500);
+    document.addEventListener('keydown', function (e) {
+        let keyName = e.key || e.keyCode;
+        if (keyName === 'Control') {
+            for (let i = 0; i < feeds.length; i += 1) {
+                feeds[i].classList.add('hovered');
+                if (app_settings.hover_notification) {
+                    Materialize.toast('Feed paused due to holding ' + keyName, 1500);
+                }
             }
-        });
-        feeds[i].addEventListener('mouseleave', function () {
-            this.classList.remove('hovered');
-        });
-    }
+        }
+    });
+    document.addEventListener('keyup', function (e) {
+        let keyName = e.key || e.keyCode;
+        if (keyName === 'Control') {
+            for (let i = 0; i < feeds.length; i += 1) {
+                feeds[i].classList.remove('hovered');
+            }
+        }
+    });
 
     let noops = document.getElementsByClassName('no-op');
     for (let i = 0; i < noops.length; i += 1) {
