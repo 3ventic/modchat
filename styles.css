@@ -73,3 +73,7 @@
 .row {
     margin: 0.5em auto;
 }
+.hidden,
+#app div .hidden {
+    display: none;
+}

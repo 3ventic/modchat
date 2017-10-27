@@ -14,11 +14,11 @@
                     <li class="hide-on-small-only">
                         <a href="https://3v.fi/">3v.fi</a>
                     </li>
-                    <li class="hide-on-small-only">
-                        <a href="https://github.com/3ventic/modchat">GitHub</a>
-                    </li>
                     <li>
                         <a href="#" id="open-settings"><i class="material-icons">settings</i></a>
+                    </li>
+                    <li>
+                        <a href="https://twitchstuff.3v.fi/chatters/?ch=" id="viewerlist" title="Chatter List" target="_blank"><i class="material-icons">list</i></a>
                     </li>
                     <li>
                         <a href="#" class="no-op">
@@ -53,11 +53,11 @@
 <section id="app">
     <ul class="collapsible" data-collapsible="expandable">
         <li>
-            <div class="collapsible-header active"><i class="material-icons">timeline</i>Events</div>
+            <div class="collapsible-header active"><i class="material-icons">timeline</i>Events <i class="material-icons pause hidden right">pause</i></div>
             <div class="collapsible-body feed strip-pad" id="events"></div>
         </li>
         <li>
-            <div class="collapsible-header active"><i class="material-icons">chat</i>Live Chat</div>
+            <div class="collapsible-header active"><i class="material-icons">chat</i>Live Chat <i class="material-icons pause hidden right">pause</i></div>
             <div class="collapsible-body strip-pad" id="chat">
                 <div id="chat-feed" class="feed"></div>
                 <div class="input-field">

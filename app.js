@@ -39,6 +39,7 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
 
     function load_channel_data(channel_name) {
         console.log('Loading app for channel ' + channel_name);
+        document.getElementById('viewerlist').setAttribute('href', 'https://twitchstuff.3v.fi/chatters/?ch=' + encodeURIComponent(channel_name));
         fetch(twitchApiBaseUrl, { headers: twitchApiBaseHeaders })
             .then(response => response.json())
             .then(function (json) {
@@ -79,14 +80,13 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
 
     // Event handlers
     let feeds = document.getElementsByClassName('feed');
+    let pause_icons = document.getElementsByClassName('pause');
     document.addEventListener('keydown', function (e) {
         let keyName = e.key || e.keyCode;
         if (keyName === 'Control') {
             for (let i = 0; i < feeds.length; i += 1) {
                 feeds[i].classList.add('hovered');
-                if (app_settings.hover_notification) {
-                    Materialize.toast('Feed paused due to holding ' + keyName, 1500);
-                }
+                pause_icons[i].classList.remove('hidden');
             }
         }
     });
@@ -95,6 +95,7 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
         if (keyName === 'Control') {
             for (let i = 0; i < feeds.length; i += 1) {
                 feeds[i].classList.remove('hovered');
+                pause_icons[i].classList.add('hidden');
             }
         }
     });
