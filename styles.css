@@ -77,3 +77,23 @@
 #app div .hidden {
     display: none;
 }
+.theme--dark {
+    color: #FFF;
+    background-color: #1e1e1e;
+}
+.theme--dark .collapsible-header {
+    color: #fff;
+    background-color: #4a148c;
+    border-color: #3e3e3e;
+}
+.theme--dark .modal-content {
+    color: #fff;
+    background-color: #3e3e3e;
+}
+.theme--dark #chat-feed .row,
+.theme--dark .collapsible {
+    border-color: #3e3e3e;
+}
+.theme--dark .btn-flat {
+    color: #fff;
+}

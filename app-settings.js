@@ -1,5 +1,5 @@
 var app_settings = {
-    version: 5,
+    version: 6,
     hover_notification: true,
     use_high_res_emotes: false,
     timeout_durations: [0, 3600, 600, 1],
@@ -7,7 +7,8 @@ var app_settings = {
     name_colors: true,
     prompt_reason: false,
     default_reason: '',
-    report_hotkey: 'r'
+    report_hotkey: 'r',
+    dark_mode: false
 };
 
 (function () {
@@ -39,6 +40,7 @@ var app_settings = {
     document.getElementById('prompt-reason').checked = app_settings.prompt_reason;
     document.getElementById('default-reason').value = app_settings.default_reason;
     document.getElementById('report-hotkey').value = app_settings.report_hotkey;
+    document.getElementById('dark-mode').checked = app_settings.dark_mode;
 
     for (let i = 0; i < app_settings.timeout_durations.length; i += 1) {
         let input = document.getElementById('timeout-setting-' + i);
@@ -52,6 +54,12 @@ var app_settings = {
         input.addEventListener('change', function () {
             app_settings.modcard_hotkeys[i] = this.value = this.value ? this.value[0] : default_settings.modcard_hotkeys[i];
         });
+    }
+
+    // Apply DOM changes
+    let el_html = document.getElementsByTagName('html')[0];
+    if (app_settings.dark_mode) {
+        el_html.classList.add('theme--dark');
     }
 
     // Listen for changes
@@ -72,6 +80,14 @@ var app_settings = {
     });
     document.getElementById('report-hotkey').addEventListener('change', function () {
         app_settings.report_hotkey = this.value ? this.value[0] : default_settings.report_hotkey;
+    });
+    document.getElementById('dark-mode').addEventListener('change', function () {
+        app_settings.dark_mode = this.checked;
+        if (app_settings.dark_mode) {
+            el_html.classList.add('theme--dark');
+        } else {
+            el_html.classList.remove('theme--dark');
+        }
     });
     document.getElementById('save-settings').addEventListener('click', function () {
         localStorage.setItem('settings', JSON.stringify(app_settings));
