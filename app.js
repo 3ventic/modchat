@@ -98,6 +98,10 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
             }
         }
     });
+    document.getElementById('open-settings').addEventListener('click', function (evt) {
+        $('#settings').modal().modal('open');
+        evt.preventDefault();
+    });
 
     let noops = document.getElementsByClassName('no-op');
     for (let i = 0; i < noops.length; i += 1) {

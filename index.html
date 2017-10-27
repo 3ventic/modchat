@@ -18,6 +18,9 @@
                         <a href="https://github.com/3ventic/modchat">GitHub</a>
                     </li>
                     <li>
+                        <a href="#" id="open-settings"><i class="material-icons">settings</i></a>
+                    </li>
+                    <li>
                         <a href="#" class="no-op">
                             <span id="state-followers-only" class="new badge black tooltipped"
                                 data-position="bottom" data-delay="50" data-tooltip="Followers Only; users must have been following for this many minutes to chat" data-badge-caption="Follow">
@@ -63,113 +66,113 @@
                 </div>
             </div>
         </li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons">settings</i>Settings</div>
-            <div class="collapsible-body" id="settings">
-                <p class="flow-text">
-                    Most settings take effect immediately after changing the setting, but will not save across refreshes until you choose to save.
-                    Some settings may require a save and refresh.
-                </p>
-                <ul class="collapsible" data-collapsible="accordion">
-                    <li>
-                        <div class="collapsible-header"><i class="material-icons">backup</i>Import &amp; Export</div>
-                        <div class="collapsible-body">
-                            <input type="text" id="backup-import" placeholder="settings object {...}">
-                            <button class="btn waves-effect waves-light">Import Settings <i class="material-icons left">settings_backup_restore</i></button>
-                            <hr>
-                            <button class="btn waves-effect waves-light">Export Settings <i class="material-icons left">get_app</i></button>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><i class="material-icons">speaker_notes</i>Features</div>
-                        <div class="collapsible-body">
-                            <div class="switch">
-                                <label>
-                                    <input type="checkbox" id="hover-notification">
-                                    <span class="lever"></span>
-                                    Show notification on CTRL pause
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="switch">
-                                <label>
-                                    <input type="checkbox" id="highres-emotes">
-                                    <span class="lever"></span>
-                                    Use higher resolution emote images
-                                </label>
-                            </div>
-                            <hr>
-                            <div class="switch">
-                                <label>
-                                    <input type="checkbox" id="name-colors">
-                                    <span class="lever"></span>
-                                    Show name colors
-                                </label>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"><i class="material-icons">schedule</i>Timeouts</div>
-                        <div class="collapsible-body">
-                            <p class="flow-text">
-                                Timeout duratios in seconds per button from left to right. 0 means permanent ban.
-                            </p>
-                            <p class="range-field">
-                                <input type="range" id="timeout-setting-0" min="0" max="7200" step="60">
-                            </p>
-                            <p class="range-field hide-on-small-only">
-                                <input type="range" id="timeout-setting-1" min="0" max="7200" step="60">
-                            </p>
-                            <p class="range-field hide-on-med-and-down">
-                                <input type="range" id="timeout-setting-2" min="0" max="7200" step="60">
-                            </p>
-                            <p class="range-field hide-on-med-and-down">
-                                <input type="range" id="timeout-setting-3" min="0" max="7200" step="60">
-                            </p>
-                            <hr>
-                            <p class="flow-text">
-                                Hotkeys for timeout durations and other actions in the modcards. Combinations are currently <strong>not</strong> supported.
-                            </p>
-                            <div class="input-field">
-                                <input id="timeout-hotkey-0" type="text" data-length="1">
-                                <label for="timeout-hotkey-0">Timeout Hotkey 1 (default b)</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="timeout-hotkey-1" type="text" data-length="1">
-                                <label for="timeout-hotkey-1">Timeout Hotkey 2 (default h)</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="timeout-hotkey-2" type="text" data-length="1">
-                                <label for="timeout-hotkey-2">Timeout Hotkey 3 (default t)</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="timeout-hotkey-3" type="text" data-length="1">
-                                <label for="timeout-hotkey-3">Timeout Hotkey 4 (default p)</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="report-hotkey" type="text" data-length="1">
-                                <label for="report-hotkey">Report Hotkey (default r)</label>
-                            </div>
-                            <hr>
-                            <div class="switch">
-                                <label>
-                                    <input type="checkbox" id="prompt-reason">
-                                    <span class="lever"></span>
-                                    Prompt for custom reason
-                                </label>
-                            </div>
-                            <div class="input-field">
-                                <input id="default-reason" type="text" data-length="200">
-                                <label for="default-reason">Default Timeout/Ban Reason</label>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <button class="btn waves-effect waves-light" id="save-settings">Save <i class="material-icons left">save</i></button>
-            </div>
-        </li>
     </ul>
 </section>
+
+<div id="settings" class="modal">
+    <div class="modal-content">
+        <p class="flow-text">
+            Most settings take effect immediately after changing the setting, but will not save across refreshes until you choose to save.
+            Some settings may require a save and refresh.
+        </p>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">backup</i>Import &amp; Export</div>
+                <div class="collapsible-body">
+                    <input type="text" id="backup-import" placeholder="settings object {...}">
+                    <button class="btn waves-effect waves-light">Import Settings <i class="material-icons left">settings_backup_restore</i></button>
+                    <hr>
+                    <button class="btn waves-effect waves-light">Export Settings <i class="material-icons left">get_app</i></button>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">speaker_notes</i>Features</div>
+                <div class="collapsible-body">
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" id="hover-notification">
+                            <span class="lever"></span>
+                            Show notification on CTRL pause
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" id="highres-emotes">
+                            <span class="lever"></span>
+                            Use higher resolution emote images
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" id="name-colors">
+                            <span class="lever"></span>
+                            Show name colors
+                        </label>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">schedule</i>Timeouts</div>
+                <div class="collapsible-body">
+                    <p class="flow-text">
+                        Timeout duratios in seconds per button from left to right. 0 means permanent ban.
+                    </p>
+                    <p class="range-field">
+                        <input type="range" id="timeout-setting-0" min="0" max="7200" step="60">
+                    </p>
+                    <p class="range-field hide-on-small-only">
+                        <input type="range" id="timeout-setting-1" min="0" max="7200" step="60">
+                    </p>
+                    <p class="range-field hide-on-med-and-down">
+                        <input type="range" id="timeout-setting-2" min="0" max="7200" step="60">
+                    </p>
+                    <p class="range-field hide-on-med-and-down">
+                        <input type="range" id="timeout-setting-3" min="0" max="7200" step="60">
+                    </p>
+                    <hr>
+                    <p class="flow-text">
+                        Hotkeys for timeout durations and other actions in the modcards. Combinations are currently <strong>not</strong> supported.
+                    </p>
+                    <div class="input-field">
+                        <input id="timeout-hotkey-0" type="text" data-length="1">
+                        <label for="timeout-hotkey-0">Timeout Hotkey 1 (default b)</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="timeout-hotkey-1" type="text" data-length="1">
+                        <label for="timeout-hotkey-1">Timeout Hotkey 2 (default h)</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="timeout-hotkey-2" type="text" data-length="1">
+                        <label for="timeout-hotkey-2">Timeout Hotkey 3 (default t)</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="timeout-hotkey-3" type="text" data-length="1">
+                        <label for="timeout-hotkey-3">Timeout Hotkey 4 (default p)</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="report-hotkey" type="text" data-length="1">
+                        <label for="report-hotkey">Report Hotkey (default r)</label>
+                    </div>
+                    <hr>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" id="prompt-reason">
+                            <span class="lever"></span>
+                            Prompt for custom reason
+                        </label>
+                    </div>
+                    <div class="input-field">
+                        <input id="default-reason" type="text" data-length="200">
+                        <label for="default-reason">Default Timeout/Ban Reason</label>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <button class="btn waves-effect waves-light" id="save-settings">Save <i class="material-icons left">save</i></button>
+    </div>
+</div>
 
 <div id="channel-prompt" class="modal">
     <div class="modal-content">
