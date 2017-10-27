@@ -1,7 +1,9 @@
 .feed {
     height: 22rem;
     height: 41vh;
+    overflow-x: hidden;
     overflow-y: auto;
+    resize: vertical;
 }
 #events {
     height: 11rem;
@@ -11,7 +13,9 @@
 #chat-feed {
     height: 13rem;
     height: calc(60vh - 9rem);
+    overflow-x: hidden;
     overflow-y: auto;
+    resize: vertical;
     padding: 0;
     margin: 0;
 }
@@ -57,7 +61,15 @@
 .username {
     cursor: pointer;
     font-weight: bold;
+    margin-left: 1em;
+    margin-right: 0.5em;
 }
 .hint {
     border-bottom: 1px dashed rgba(0, 0, 0, 0.87);
+}
+.collapsible-body.strip-pad {
+    padding: 0;
+}
+.row {
+    margin: 0.5em auto;
 }

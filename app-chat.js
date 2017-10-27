@@ -132,9 +132,6 @@ function ChatClient(p_user, p_channel, p_post_event) {
 
         /* actions col */
 
-        let el_col = document.createElement('div');
-        el_col.classList.add('col', 's3', 'xl2', 'actions');
-
         for (let i = 0; i < app_settings.timeout_durations.length; i += 1) {
             let duration = app_settings.timeout_durations[i];
             let el_action = document.createElement('a');
@@ -154,27 +151,23 @@ function ChatClient(p_user, p_channel, p_post_event) {
             el_action.href = "#";
             el_action.textContent = this.get_friendly_duration(duration);
 
-            el_col.appendChild(el_action);
+            el_row.appendChild(el_action);
         };
-
-        el_row.appendChild(el_col);
 
         /* username col */
 
-        el_col = document.createElement('div');
-        el_col.classList.add('col', 's4', 'm3', 'l3', 'xl2', 'right-align');
-
-        let el_coldata = document.createElement('span');
-        el_coldata.classList.add('username');
+        let el_username = document.createElement('span');
+        el_username.classList.add('username');
         let name = userstate["display-name"] || userstate.username;
         if (name.toLowerCase() !== userstate.username) {
             name += ' (' + userstate.username + ')';
         }
+        name += ': ';
         for (let i = 0; i < el_badges.length; i += 1) {
-            el_coldata.appendChild(el_badges[i]);
+            el_username.appendChild(el_badges[i]);
         }
-        el_coldata.appendChild(document.createTextNode(name));
-        el_coldata.addEventListener('click', evt => {
+        el_username.appendChild(document.createTextNode(name));
+        el_username.addEventListener('click', evt => {
             let modal = $('#modcard');
 
             // Set variables for modcard
@@ -262,14 +255,13 @@ function ChatClient(p_user, p_channel, p_post_event) {
             evt.preventDefault();
         });
 
-        el_col.appendChild(el_coldata);
-        el_row.appendChild(el_col);
+        el_row.appendChild(el_username);
 
         /* message col */
 
-        el_col = document.createElement('div');
-        el_col.classList.add('col', 's5', 'm6', 'l6', 'xl8', 'chat-message');
-        el_coldata = this.format_emotes(message, userstate.emotes);
+        let el_col = document.createElement('span');
+        el_col.classList.add('chat-message');
+        let el_coldata = this.format_emotes(message, userstate.emotes);
         el_coldata.forEach(el => {
             el_col.appendChild(el);
         });
@@ -372,7 +364,7 @@ function ChatClient(p_user, p_channel, p_post_event) {
         el_feed.appendChild(el);
 
         // Remove excess elements from the feed
-        if (el_feed.childElementCount > 100) {
+        if (el_feed.childElementCount > 3000) {
             let el_removed = el_feed.firstChild;
             el_feed.removeChild(el_feed.firstChild);
             $(el_removed.querySelectorAll('.dynamic-tooltip')).tooltip('remove');
