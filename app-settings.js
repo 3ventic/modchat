@@ -4,7 +4,7 @@ var app_settings = {
     use_high_res_emotes: false,
     timeout_durations: [0, 3600, 600, 1],
     modcard_hotkeys: ['b', 'h', 't', 'p'], // One for each timeout duration in order
-    name_colors: false,
+    name_colors: true,
     prompt_reason: false,
     default_reason: '',
     report_hotkey: 'r'
