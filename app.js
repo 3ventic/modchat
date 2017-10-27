@@ -82,7 +82,7 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
     let feeds = document.getElementsByClassName('feed');
     let pause_icons = document.getElementsByClassName('pause');
     document.addEventListener('keydown', function (e) {
-        let keyName = e.key || e.keyCode;
+        let keyName = e.key || e.char;
         if (keyName === 'Control') {
             for (let i = 0; i < feeds.length; i += 1) {
                 feeds[i].classList.add('hovered');
@@ -91,12 +91,18 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
         }
     });
     document.addEventListener('keyup', function (e) {
-        let keyName = e.key || e.keyCode;
+        let keyName = e.key || e.char;
         if (keyName === 'Control') {
             for (let i = 0; i < feeds.length; i += 1) {
                 feeds[i].classList.remove('hovered');
                 pause_icons[i].classList.add('hidden');
             }
+        }
+    });
+    document.getElementById('reason-prompt-input').addEventListener('keyup', function (e) {
+        let keyName = e.key || e.char;
+        if (keyName === 'Enter') {
+            $('#reason-prompt').modal('close');
         }
     });
     document.getElementById('open-settings').addEventListener('click', function (evt) {
