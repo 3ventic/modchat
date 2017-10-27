@@ -99,6 +99,23 @@ function ChatClient(p_user, p_channel, p_post_event) {
         return duration + ' s';
     };
 
+    this.color_correct = color => {
+        if (/^#[0-9a-fA-F]{6}/.test(color)) {
+            let corrected_color = '#';
+            for (let i = 1; i < 6; i += 2) {
+                let col = ~~(parseInt(color[i] + color[i + 1], 16) / 1.25);
+                if (col < 16) {
+                    corrected_color += '0';
+                }
+                corrected_color += col.toString(16);
+            }
+            return corrected_color;
+        }
+        return color;
+    }
+
+    this.unescape_tag = tag => tag || tag.replace(/\\:/g, ';').replace(/\\s/g, ' ').replace(/\\\\/g, '\\').replace(/[\\r\\n]/g, '\u2424');
+
     this.cs.on('message', (channel, userstate, message, self) => {
         if (channel.substring(1) !== this.channel.name) {
             return;
@@ -158,9 +175,10 @@ function ChatClient(p_user, p_channel, p_post_event) {
 
         let el_username = document.createElement('span');
         el_username.classList.add('username');
-        let name = userstate["display-name"] || userstate.username;
+        el_username.style.color = this.color_correct(userstate.color);
+        let name = this.unescape_tag(userstate["display-name"]) || this.unescape_tag(userstate.username);
         if (name.toLowerCase() !== userstate.username) {
-            name += ' (' + userstate.username + ')';
+            name += ' (' + this.unescape_tag(userstate.username) + ')';
         }
         name += ': ';
         for (let i = 0; i < el_badges.length; i += 1) {
