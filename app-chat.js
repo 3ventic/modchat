@@ -273,6 +273,7 @@ function ChatClient(p_user, p_channel, p_post_event) {
                     document.getElementById('modal-timeout-' + i).removeEventListener('click', timeout[i]);
                 }
 
+                document.getElementById('modal-report').removeEventListener('click', report);
                 document.removeEventListener('keydown', hotkey_handler);
 
                 // Reset whisper input
