@@ -393,20 +393,27 @@ function ChatClient(p_user, p_channel, p_post_event) {
         this.post_el_to_dom(el_row);
     };
 
+    this.remove_excess_elements = el_feed => {
+        let el_removed = el_feed.firstChild;
+        el_feed.removeChild(el_feed.firstChild);
+        $(el_removed.querySelectorAll('.dynamic-tooltip')).tooltip('remove');
+    }
+
     this.post_el_to_dom = el => {
         // Add to feed
         let el_feed = document.getElementById('chat-feed');
         el_feed.appendChild(el);
 
         // Remove excess elements from the feed
-        if (el_feed.childElementCount > 3000) {
-            let el_removed = el_feed.firstChild;
-            el_feed.removeChild(el_feed.firstChild);
-            $(el_removed.querySelectorAll('.dynamic-tooltip')).tooltip('remove');
+        while (el_feed.childElementCount > 200) {
+            this.remove_excess_elements(el_feed);
         }
 
         // Scroll to bottom if not hovering
         if (!el_feed.classList.contains("hovered")) {
+            while (el_feed.childElementCount > 1000) {
+                this.remove_excess_elements(el_feed);
+            }
             el_feed.scrollTop = el_feed.scrollHeight;
         }
     };
