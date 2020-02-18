@@ -61,7 +61,7 @@ function PubSub() {
             nonce: nonce(15),
             data: {
                 topics: to_listen,
-                auth_token: localStorage.token
+                auth_token: localStorage.modchattoken
             }
         };
         this.send_json(message);

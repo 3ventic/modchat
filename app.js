@@ -2,10 +2,10 @@ var twitchApiBaseUrl = 'https://api.twitch.tv/v5/';
 var twitchApiBaseHeaders = new Headers({
     'Client-Id': 'ises2vcn10gk4dq0w083d0ortqwdzx',
     'Accept': 'application/json',
-    'Authorization': 'OAuth ' + localStorage.token,
+    'Authorization': 'OAuth ' + localStorage.modchattoken,
     'Content-Type': 'application/json'
 });
-var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=ises2vcn10gk4dq0w083d0ortqwdzx&redirect_uri=https%3A%2F%2Ftwitchstuff.3v.fi%2Fmodchat%2F&response_type=token&scope=chat_login';
+var twitchApiAuthUrl = 'https://id.twitch.tv/oauth2/authorize?client_id=ises2vcn10gk4dq0w083d0ortqwdzx&redirect_uri=https%3A%2F%2Ft.3v.fi%2Fmodchat%2F&response_type=token&scope=chat_login+channel:moderate+chat:edit+chat:read+whispers:read+whispers:edit';
 
 (function () {
     'use strict';
@@ -20,7 +20,7 @@ var twitchApiAuthUrl = 'https://api.twitch.tv/kraken/oauth2/authorize?client_id=
         if (window.location.hash.length > 1) {
             let hash_parts = window.location.hash.substring(1).split(/[=&]/g);
             if (hash_parts.length > 2 && hash_parts[0] === 'access_token') {
-                localStorage.token = hash_parts[1];
+                localStorage.modchattoken = hash_parts[1];
                 window.location.hash = '';
                 window.location.reload();
             } else {

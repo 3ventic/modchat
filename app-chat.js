@@ -35,7 +35,7 @@ function ChatClient(p_user, p_channel, p_post_event) {
         },
         identity: {
             username: this.user.name,
-            password: 'oauth:' + localStorage.token
+            password: 'oauth:' + localStorage.modchattoken
         },
         channels: ['#' + this.channel.name]
     });
